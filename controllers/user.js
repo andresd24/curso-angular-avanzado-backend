@@ -5,9 +5,12 @@ var bcrypt = require('bcrypt-nodejs');
 //modelos
 var User = require('../models/user');
 
+var jwt = require('../services/jwt');
+
 function pruebas(req, res) {
     res.status(200).send({
-        message: 'Probando controlador de usuarios y la accion de pruebas'
+        message: 'Probando controlador de usuarios y la accion de pruebas',
+        user: req.user
     });
 
 } // end pruebas
@@ -88,8 +91,16 @@ function login(req, res)
             {
                 bcrypt.compare(password, user.password, (err, check) => {
                     if (check) {
-                        res.status(200).send({user}); 
-                        res.end();       
+                        if (params.gettoken) {
+                            res.status(200).send({
+                                token: jwt.createToken(user)
+                            });
+                        }
+                        else
+                        {
+                            res.status(200).send({user}); 
+                            res.end();
+                        }       
                     }   
                     else {
                         res.status(404).send({message: "el usuario no ha podido loguearse correctamente"});        
