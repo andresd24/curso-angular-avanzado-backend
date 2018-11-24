@@ -21,8 +21,6 @@ function saveUser(req, res) {
     var user = new User();
     var params = req.body;
 
-    console.log(params);
-
     if (params.name && params.surname && params.email && params.password)
     {
         user.name = params.name;
@@ -52,6 +50,7 @@ function saveUser(req, res) {
                                 }       
                                 else {
                                     res.status(200).send({user: userStored});
+                                    console.log(userStored);
                                 }
                             }
             
@@ -116,8 +115,35 @@ function login(req, res)
 }   // end login
 
 
+//update user
+
+function updateUser(req, res) {
+    var userId = req.params.id;
+    var update = req.body;
+    
+    if (userId != req.user.sub) {
+        return res.status(500).send({message: 'no tienes permiso para actualizar usuario'});
+    }
+
+    User.findByIdAndUpdate(userId, update, {new: true}, (err, userUpdated) => {
+        if (err) {
+            res.status(500).send({message: 'error actualizando usuario'});
+        }
+        else {
+            if (!userUpdated) {
+                res.status(404).send({message: 'No se ha podido actualizar el usuario'});
+            }
+            else 
+            {
+                res.status(200).send({user: userUpdated});
+            }
+        }
+    });
+}   // end update user
+
 module.exports = {
     pruebas,
     saveUser,
-    login
+    login,
+    updateUser
 };

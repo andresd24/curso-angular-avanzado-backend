@@ -3,6 +3,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+mongoose.set('useFindAndModify', false);
 
 var UserSchema = Schema(
     {
