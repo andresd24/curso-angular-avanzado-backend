@@ -7,6 +7,7 @@ var app = express();
 
 // cargar rutas
 var user_routes = require('./routes/user');
+var animal_routes = require('./routes/animal');
 
 
 // middleware the body-parser
@@ -17,6 +18,7 @@ app.use(bodyParser.json());
 
 // rutas base
 app.use('/api', user_routes);
+app.use('/api', animal_routes);
 
 // rutas y parser
 app.post('/probando', (req, res) => {

@@ -9,7 +9,7 @@ var AnimalSchema = Schema(
         description: String,
         year: Number,
         image: String,
-        user: { type: Schema.ObjectId, ref: 'User'}
+        user: { type: Schema.Types.ObjectId, ref: 'User'}
     }
 );
 

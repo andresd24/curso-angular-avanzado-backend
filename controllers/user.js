@@ -7,6 +7,7 @@ var path = require('path');
 //modelos
 var User = require('../models/user');
 
+// libs
 var jwt = require('../services/jwt');
 
 function pruebas(req, res) {
@@ -218,6 +219,23 @@ function getImageFile(req, res) {
     });    
 }   // end getImageFile
 
+// getKeepers
+function getKeepers(req,res) {
+    User.find({role: 'ROLE_ADMIN'}).exec((err, users) => {
+        if (err) {
+            res.status(500).send({message: 'error en la peticion'});
+        }
+        else {
+            if (!users) {
+                res.status(500).send({message: 'No hay cuidadores'});
+            }
+            else {
+                res.status(500).send({users});
+            }    
+        }
+    });
+}
+
 // exports
 module.exports = {
     pruebas,
@@ -225,5 +243,6 @@ module.exports = {
     login,
     updateUser,
     updloadImage,
-    getImageFile
+    getImageFile,
+    getKeepers
 };
