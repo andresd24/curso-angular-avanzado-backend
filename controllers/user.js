@@ -200,12 +200,7 @@ function updloadImage(req, res) {
         })
 
     }
-
-
-
- 
-
-}
+}   // end uploadImage
 
 module.exports = {
     pruebas,
