@@ -53,7 +53,6 @@ function saveUser(req, res) {
                                 }       
                                 else {
                                     res.status(200).send({user: userStored});
-                                    console.log(userStored);
                                 }
                             }
             
