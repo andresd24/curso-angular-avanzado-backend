@@ -1,6 +1,7 @@
 'use strict'
 //modulos
 var bcrypt = require('bcrypt-nodejs');
+var fs = require('fs');
 
 //modelos
 var User = require('../models/user');
@@ -116,7 +117,6 @@ function login(req, res)
 
 
 //update user
-
 function updateUser(req, res) {
     var userId = req.params.id;
     var update = req.body;
@@ -141,9 +141,76 @@ function updateUser(req, res) {
     });
 }   // end update user
 
+// updloadImage
+function updloadImage(req, res) {
+    var userId = req.params.id;
+    var file_name = "No subido...";
+
+    var file_path;
+    var file_split;
+    var file_name;
+
+    if (req.files)
+    {
+        file_path = req.files.image.path;
+        file_split = file_path.split('/');
+        file_name = file_split[2];
+    }
+
+
+    var ext_split = file_name.split('\.');
+    var file_ext = ext_split[1];
+
+    if (file_ext == 'png' || file_ext == 'jpg' || file_ext == 'jpeg' || file_ext == 'gif') {
+        if (userId != req.user.sub) {
+            return res.status(500).send({ message: 'no tienes permiso para actulizar el usuario'});
+        }
+        
+        User.findByIdAndUpdate(userId, {image: file_name}, {new: true}, (err, userUpdated) => {
+            if (err) {
+                res.status(500).send({message: 'error actualizando usuario'});
+            }
+            else {
+                if (!userUpdated) {
+                    res.status(404).send({message: 'No se ha podido actualizar el usuario'});
+                }
+                else 
+                {
+                    res.status(200).send({user: userUpdated, image: file_name});
+                }
+            }
+        });
+    }
+    else {
+        fs.unlink(file_path, (err) => {
+            if (err) {
+                return res.status(500).send( {
+                    message: 'extension no valida y fichero no guardado ', 
+                    file_ext: file_ext,
+                    file_path: file_path
+                });
+            }
+            else {
+                return res.status(500).send( {
+                    message: 'extension no valida', 
+                    file_ext: file_ext,
+                    file_path: file_path
+                });
+            }
+        })
+
+    }
+
+
+
+ 
+
+}
+
 module.exports = {
     pruebas,
     saveUser,
     login,
-    updateUser
+    updateUser,
+    updloadImage
 };
