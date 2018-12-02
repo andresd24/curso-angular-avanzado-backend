@@ -230,7 +230,7 @@ function getKeepers(req,res) {
                 res.status(500).send({message: 'No hay cuidadores'});
             }
             else {
-                res.status(500).send({users});
+                res.status(200).send({users});
             }    
         }
     });
